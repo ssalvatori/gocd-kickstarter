@@ -4,7 +4,7 @@ set -Eeu -o pipefail
 
 GOCD_URL="${GO_URL:-http://localhost:8153/go/}"
 
-TERRAFORM_PROVIDER_VERSION="1.0.0"
+TERRAFORM_PROVIDER_VERSION="1.0.7"
 OPERATING_SYSTEM="$(uname -s)"
 GOCD_AUTO_REGISTER_RESOURCES="gocd"
 
@@ -14,19 +14,19 @@ _os_parameters(){
   case "${OPERATING_SYSTEM}" in
     'Darwin')
       TERRAFORM_PROVIDER_DIRECTORY="terraform/.terraform/plugins/darwin_amd64"
-      TERRAFORM_PROVIDER_CHECKSUM="1bd8d28b66bddb59bd38d57b15e6f6368411ac6ff7437c77c6f4b926e996a8aa"
+      TERRAFORM_PROVIDER_CHECKSUM="8d3ba7eaf3b6b6b65acba5e30ef5602a813db6f1a58c8886707022e626658ee8"
       TERRAFORM_PROVIDER_PLATFORM_PACKAGE_SUFFIX="zip"
       TERRAFORM_PROVIDER_PLATFORM_SUFFIX="darwin-amd64.${TERRAFORM_PROVIDER_PLATFORM_PACKAGE_SUFFIX}"
       ;;
     'MINGW64_NT')
       TERRAFORM_PROVIDER_DIRECTORY="terraform/.terraform/plugins/windows_amd64"
-      TERRAFORM_PROVIDER_CHECKSUM="b07bcf34a7de20f2a079038291adfc4faabbc9ea9b6952ee6c7a940a2cfe150b"
+      TERRAFORM_PROVIDER_CHECKSUM="3ae46aa52250c1936872adda52903abea8a03b29ebb3e7ebe20a78cfb9864898"
       TERRAFORM_PROVIDER_PLATFORM_PACKAGE_SUFFIX="zip"
       TERRAFORM_PROVIDER_PLATFORM_SUFFIX="windows-amd64.${TERRAFORM_PROVIDER_PLATFORM_PACKAGE_SUFFIX}"
       ;;
     *)
       TERRAFORM_PROVIDER_DIRECTORY="terraform/.terraform/plugins/linux_amd64"
-      TERRAFORM_PROVIDER_CHECKSUM="07f7f86773fa053a2fb2d62064bc49efdc2505a734d68a933c023ae4dcabab7b"
+      TERRAFORM_PROVIDER_CHECKSUM="0a9effb289073462f24537061d0c373d7608b463a02f9889f556dea2c8653fac"
       TERRAFORM_PROVIDER_PLATFORM_PACKAGE_SUFFIX="tar.gz"
       TERRAFORM_PROVIDER_PLATFORM_SUFFIX="linux-amd64.${TERRAFORM_PROVIDER_PLATFORM_PACKAGE_SUFFIX}"
       ;;
@@ -76,8 +76,9 @@ _terraform() {
 
 clean() {
   rm -vf terraform/terraform.tfstate*
+  rm -rf gocd-config/*
 
-  git checkout cruise-config.xml
+  git checkout gocd-config/cruise-config.xml
 }
 
 _cleanup() {

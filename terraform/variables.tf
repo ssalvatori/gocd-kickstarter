@@ -1,5 +1,8 @@
 provider "gocd" {
-  version = "1.0.0"
+  version  = "1.0.7"
+  baseurl  = "http://localhost:8153/go/"
+  username = ""
+  password = ""
 }
 
 variable "pipeline_group_name" {
@@ -22,6 +25,12 @@ variable "default_timeout" {
   default = "10"
 }
 
+variable "my_artifact_name" {
+  type    = "string"
+  default = "my_custom_artifact"
+}
+
 variable "pipeline_resources" {
-  type = "string"
+  type    = "string"
+  default = "gocd"
 }

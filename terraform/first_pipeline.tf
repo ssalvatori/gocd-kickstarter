@@ -5,7 +5,7 @@ resource "gocd_pipeline" "first_pipeline" {
 
   environment_variables = [{
     name  = "SOME_VARIABLE"
-    value = "I'm some variable!"
+    value = "I'm some variable! - first pipeline"
   }]
 
   stages = [
@@ -50,7 +50,16 @@ data "gocd_job_definition" "first_pipeline_job" {
 
   tasks = [
     "${data.gocd_task_definition.first_pipeline_job_task.json}",
+    "${data.gocd_task_definition.first_pipeline_job_task_artifact.json}",
   ]
+
+  artifacts = [
+    {
+      type = "build"
+      source = "${var.my_artifact_name}"
+    }
+  ]
+
 }
 
 data "gocd_task_definition" "first_pipeline_job_task" {
@@ -60,5 +69,15 @@ data "gocd_task_definition" "first_pipeline_job_task" {
   arguments = [
     "-c",
     "echo $${SOME_VARIABLE}",
+  ]
+}
+
+data "gocd_task_definition" "first_pipeline_job_task_artifact" {
+  type    = "exec"
+  command = "/bin/sh"
+
+  arguments = [
+    "-c",
+    "echo $${SOME_VARIABLE} > ${var.my_artifact_name}",
   ]
 }

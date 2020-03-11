@@ -2,3 +2,6 @@
 /**/.terraform
 /**/*/.terraform
 /.plugin.*
+
+gocd-config/*
+!gocd-config/cruise-config.xml

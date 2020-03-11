@@ -33,6 +33,20 @@ data "gocd_stage_definition" "second_pipeline_stage" {
 
   jobs = [
     "${data.gocd_job_definition.second_pipeline_job.json}",
+    "${data.gocd_job_definition.second_pipeline_job_fetch_artifact.json}",
+  ]
+}
+
+
+data "gocd_job_definition" "second_pipeline_job_fetch_artifact" {
+  name = "second_job_artifact"
+
+  resources = ["${var.pipeline_resources}"]
+  timeout   = "${var.default_timeout}"
+
+  tasks = [
+    "${data.gocd_task_definition.second_pipeline_fetch_artifact_task.json}",
+    "${data.gocd_task_definition.second_pipeline_read_artifact_task.json}",
   ]
 }
 
@@ -65,5 +79,25 @@ data "gocd_task_definition" "second_pipeline_second_task" {
   arguments = [
     "-c",
     "echo \"My dependency has the label $${GO_DEPENDENCY_LABEL_${upper(gocd_pipeline.first_pipeline.name)}_DEPENDENCY}\"",
+  ]
+}
+
+data "gocd_task_definition" "second_pipeline_fetch_artifact_task" {
+  type    = "fetch"
+  pipeline = "${var.first_pipeline_name}"
+  stage = "first_stage"
+  job = "first_job"
+  source = "${var.my_artifact_name}"
+  is_source_a_file = true
+  artifact_origin = "gocd"
+}
+
+data "gocd_task_definition" "second_pipeline_read_artifact_task" {
+  type    = "exec"
+  command = "/bin/sh"
+
+  arguments = [
+    "-c",
+    "cat  ${var.my_artifact_name}",
   ]
 }
